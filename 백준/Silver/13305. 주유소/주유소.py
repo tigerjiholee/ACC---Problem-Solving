@@ -3,10 +3,11 @@ D = list(map(int, input().split(" ")))
 P = list(map(int, input().split(" ")))
 
 s = D[0]*P[0]
-for i in range(1, n):
-  if P[i] == min(p for p in P[:n-1]):
-    s += P[i]*sum(d for d in D[i:])
-    break
-  else: 
-    s += P[i]*D[i]
+min_p = P[0]
+
+for i in range(1, n-1): 
+  if P[i] < min_p:
+    min_p = P[i]
+  s += D[i]*min_p
+
 print(s)
