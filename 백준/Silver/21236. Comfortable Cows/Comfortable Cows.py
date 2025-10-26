@@ -1,37 +1,39 @@
-def isValid(x,y) : 
-  return 0 <= x <= 1000 and 0 <= y <= 1000
-
-def check(x,y): 
-  if grid[x][y] == 0:
-    return 0 
-  res = 0 
-  for dir in dirs[1:]: 
-    if isValid(x+dir[0], y+dir[1]) and grid[x+dir[0]][y+dir[1]]: 
-      res += 1 
-  return res == 3 
+def check(x,y):
+  if grid[x][y] == 0 : return False 
+  count = 0
+  for i in range(4):
+    if 0<= x+dx[i] <= mx and 0<=y+dy[i]<= my and grid[x+dx[i]][y+dy[i]] == 1:
+      count += 1
+  return count == 3
 
 n = int(input())
-grid = [[0] * 1001 for _ in range(1001)] 
-dirs = [[0,0], [-1,0], [1,0], [0,-1], [0,1]]
-
-comf = [[0] * 1001 for _ in range(1001)] 
-ans = []
-an = 0
-for i in range(n): 
+li = []
+mx,my = 0,0
+for i in range(n):
   x,y = map(int,input().split())
-  grid[x][y] = 1
+  li.append((x,y))
+  if x > mx: 
+    mx = x
+  if y > my:
+    my = y
+
+grid = [[0 for _ in range(my+1)] for _ in range(mx+1)]
+
+dx = [-1,0,0,1]
+dy = [0,-1,1,0]
+
+count = 0
+ 
+for pair in li: 
+  for i in range(4):
+    if (0 <= pair[0] + dx[i] <= mx ) and (0<=pair[1]+dy[i]<=my) and check(pair[0]+dx[i],pair[1]+dy[i]):
+      count -= 1
   
-  for dir in dirs:
-    nx, ny = x+dir[0], y+dir[1]
-    if isValid(nx,ny): 
-      if check(nx, ny) and not comf[nx][ny]: 
-        an += 1
-        comf[nx][ny] = 1
-      elif not check(nx, ny) and comf[nx][ny]: 
-        an -= 1
-        comf[nx][ny] = 0
-
-  ans.append(an)
-
-for item in ans:
-  print(item)
+  grid[pair[0]][pair[1]] = 1
+  if check(pair[0],pair[1]):
+    count += 1
+    
+  for i in range(4):
+    if (0 <= pair[0] + dx[i] <= mx ) and (0<=pair[1]+dy[i]<=my) and check(pair[0]+dx[i],pair[1]+dy[i]):
+      count += 1
+  print(count)
